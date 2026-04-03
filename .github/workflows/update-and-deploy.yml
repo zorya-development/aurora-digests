@@ -1,6 +1,8 @@
 name: Fetch & Deploy
 
 on:
+  push:
+    branches: [master]
   schedule:
     - cron: "0 6 * * *"  # Daily at 6am UTC, after nightly digest runs at midnight
   workflow_dispatch:       # Manual trigger
