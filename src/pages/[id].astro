@@ -69,12 +69,19 @@ function renderMarkdown(text: string): string {
                 )}
               </h3>
               <p class="item-body" set:html={renderMarkdown(item.body)} />
-              {item.merged_sources.length > 0 && (
+              {(item.article?.url || item.merged_sources.length > 0) && (
                 <p class="item-also">
                   <span class="also-label">Источники:</span>
-                  {item.merged_sources.map((s, i) => (
+                  {item.article?.url && (
                     <span>
-                      {i > 0 && ", "}
+                      <a href={item.article.url} target="_blank" rel="noopener noreferrer">
+                        {item.article.source_identifier ?? item.article.url}
+                      </a>
+                    </span>
+                  )}
+                  {item.merged_sources.map((s) => (
+                    <span>
+                      {", "}
                       {s.url
                         ? <a href={s.url} target="_blank" rel="noopener noreferrer">{s.source_identifier ?? s.url}</a>
                         : s.source_identifier}
