@@ -58,7 +58,7 @@ function renderMarkdown(text: string): string {
         <h2 class="dsec-title">{section.title}</h2>
         <ul class="items">
           {section.items.map((item) => (
-            <li class="item">
+            <li class="item" id={`item-${item.id}`}>
               <h3 class="item-title">
                 {item.article?.url ? (
                   <a href={item.article.url} target="_blank" rel="noopener noreferrer">
@@ -84,6 +84,7 @@ function renderMarkdown(text: string): string {
               )}
               <button
                 class="share-btn item-share"
+                data-share-anchor={`item-${item.id}`}
                 data-share-title={item.title}
               >
                 <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -104,7 +105,12 @@ function renderMarkdown(text: string): string {
     btn.addEventListener('click', async function () {
       const label = btn.querySelector('.share-label');
       const isPage = btn.hasAttribute('data-share-page');
-      const url = isPage ? window.location.href : (btn.dataset.shareUrl || window.location.href);
+      const anchor = btn.dataset.shareAnchor;
+      const url = isPage
+        ? window.location.href
+        : anchor
+          ? window.location.origin + window.location.pathname + '#' + anchor
+          : window.location.href;
       const title = isPage
         ? document.title
         : (btn.dataset.shareTitle || document.title);
