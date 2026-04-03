@@ -17,7 +17,7 @@ const {
 
 const siteUrl = Astro.site ?? new URL("https://digests.zorya.dev");
 const canonical = new URL(Astro.url.pathname, siteUrl).href;
-const fullTitle = `${title} · Aurora AI Digests`;
+const fullTitle = `${title} · Silicon Ore`;
 
 const jsonLd =
   type === "article"
@@ -30,7 +30,7 @@ const jsonLd =
         datePublished: publishedAt,
         publisher: {
           "@type": "Organization",
-          name: "Aurora AI Digests",
+          name: "Silicon Ore",
           url: siteUrl.href,
         },
         mainEntityOfPage: { "@type": "WebPage", "@id": canonical },
@@ -38,7 +38,7 @@ const jsonLd =
     : {
         "@context": "https://schema.org",
         "@type": "WebSite",
-        name: "Aurora AI Digests",
+        name: "Silicon Ore",
         description,
         url: siteUrl.href,
       };
@@ -58,7 +58,7 @@ const jsonLd =
 
     <!-- Open Graph -->
     <meta property="og:type" content={type} />
-    <meta property="og:site_name" content="Aurora AI Digests" />
+    <meta property="og:site_name" content="Silicon Ore" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
@@ -83,6 +83,18 @@ const jsonLd =
     <div class="container">
       {showBack && <nav><a href="/">← все дайджесты</a></nav>}
       <slot />
+      <footer class="site-footer">
+        <a href="https://t.me/a8h333" target="_blank" rel="noopener noreferrer" class="footer-tg">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L8.32 14.617l-2.96-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.828.942z"/>
+          </svg>
+          Telegram
+        </a>
+        <span class="footer-sep">·</span>
+        <span class="footer-contact">
+          контакт: <a href="https://t.me/a8h333" target="_blank" rel="noopener noreferrer">@a8h333</a>
+        </span>
+      </footer>
     </div>
   </body>
   <script>
@@ -182,6 +194,57 @@ const jsonLd =
     background: var(--accent);
     z-index: 999;
     transition: width 0.1s linear;
+  }
+
+  .site-footer {
+    margin-top: 4rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    letter-spacing: 0.06em;
+  }
+
+  .footer-tg {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.12s;
+  }
+
+  .footer-tg:hover {
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .footer-tg svg {
+    width: 13px;
+    height: 13px;
+    flex-shrink: 0;
+  }
+
+  .footer-sep {
+    opacity: 0.4;
+  }
+
+  .footer-contact {
+    color: var(--text-dim);
+  }
+
+  .footer-contact a {
+    color: var(--text-muted);
+    text-decoration: none;
+  }
+
+  .footer-contact a:hover {
+    color: var(--text);
+    text-decoration: none;
   }
 
   @media (max-width: 580px) {
