@@ -1,0 +1,193 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+  showBack?: boolean;
+  type?: "website" | "article";
+  publishedAt?: string;
+}
+
+const {
+  title,
+  description = "Архив дайджестов по AI, LLM и self-hosting",
+  showBack = false,
+  type = "website",
+  publishedAt,
+} = Astro.props;
+
+const siteUrl = Astro.site ?? new URL("https://digests.zorya.dev");
+const canonical = new URL(Astro.url.pathname, siteUrl).href;
+const fullTitle = `${title} · Aurora AI Digests`;
+
+const jsonLd =
+  type === "article"
+    ? {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        headline: title,
+        description,
+        url: canonical,
+        datePublished: publishedAt,
+        publisher: {
+          "@type": "Organization",
+          name: "Aurora AI Digests",
+          url: siteUrl.href,
+        },
+        mainEntityOfPage: { "@type": "WebPage", "@id": canonical },
+      }
+    : {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        name: "Aurora AI Digests",
+        description,
+        url: siteUrl.href,
+      };
+---
+
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Core SEO -->
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content="Aurora AI Digests" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    {publishedAt && <meta property="article:published_time" content={publishedAt} />}
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+
+    <!-- JSON-LD -->
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+    <!-- Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="scroll-progress"></div>
+    <div class="container">
+      {showBack && <nav><a href="/">← все дайджесты</a></nav>}
+      <slot />
+    </div>
+  </body>
+  <script>
+    const bar = document.getElementById('scroll-progress')!;
+    const update = () => {
+      const scrolled = window.scrollY;
+      const total = document.documentElement.scrollHeight - window.innerHeight;
+      bar.style.width = total > 0 ? (scrolled / total * 100) + '%' : '0%';
+    };
+    window.addEventListener('scroll', update, { passive: true });
+    update();
+  </script>
+</html>
+
+<style is:global>
+  :root {
+    --bg:           #191919;
+    --surface:      #222222;
+    --border:       #2e2e2e;
+    --text:         #d8d4cc;
+    --text-content: #bababa;
+    --text-muted:   #7a7a7a;
+    --text-dim:     #555;
+    --accent:       #d4952a;
+    --link:         #6b9fd4;
+    --link-hover:   #93bfee;
+    --font:         'Rubik', 'Helvetica Neue', Arial, sans-serif;
+    --mono:         'JetBrains Mono', 'Fira Mono', monospace;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html { font-size: 22px; }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  .container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 3rem 2rem 6rem;
+  }
+
+  @media (min-width: 900px) {
+    .container {
+      padding: 4rem 3rem 8rem;
+    }
+  }
+
+  a {
+    color: var(--link);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--link) 40%, transparent);
+    text-underline-offset: 3px;
+    transition: color 0.12s, text-decoration-color 0.12s;
+  }
+
+  a:hover {
+    color: var(--link-hover);
+    text-decoration-color: var(--link-hover);
+  }
+
+  nav {
+    margin-bottom: 3rem;
+  }
+
+  nav a {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    transition: color 0.12s;
+  }
+
+  nav a:hover {
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  #scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 8px;
+    width: 0%;
+    background: var(--accent);
+    z-index: 999;
+    transition: width 0.1s linear;
+  }
+
+  @media (max-width: 580px) {
+    html { font-size: 18px; }
+    .container {
+      padding: 1.5rem 1rem 4rem;
+    }
+  }
+</style>

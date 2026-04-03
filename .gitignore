@@ -1,0 +1,6 @@
+node_modules/
+.env
+dist/
+.astro/
+# Digest JSON files are fetched at build time, not committed
+data/digests/*.json

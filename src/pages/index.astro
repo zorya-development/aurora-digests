@@ -1,0 +1,140 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../layouts/Base.astro";
+
+const digests = (await getCollection("digests")).sort(
+  (a, b) => new Date(b.data.created_at).getTime() - new Date(a.data.created_at).getTime()
+);
+
+function formatDate(iso: string): string {
+  return new Date(iso).toLocaleDateString("ru-RU", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+}
+
+function readingTime(digest: (typeof digests)[number]): number {
+  let words = 0;
+  for (const section of digest.data.sections) {
+    for (const item of section.items) {
+      words += item.title.split(/\s+/).length;
+      words += item.body.split(/\s+/).length;
+    }
+  }
+  return Math.max(1, Math.round(words / 200));
+}
+---
+
+<Base title="Aurora AI Digests" description="Архив дайджестов по AI, LLM и self-hosting">
+  <header class="ih">
+    <h1 class="ih-title">AURORA AI DIGESTS</h1>
+    <p class="ih-sub">DIGESTS&thinsp;|&thinsp;AI&thinsp;|&thinsp;LLM&thinsp;|&thinsp;SELF-HOSTING</p>
+  </header>
+
+  {digests.length === 0 && <p class="empty">Дайджестов пока нет.</p>}
+
+  <ul class="dlist">
+    {digests.map((digest) => (
+      <li class="dlist-item">
+        <a href={`/${digest.id}`} class="dcard">
+          <span class="dcard-meta">
+            <span class="dcard-date">{formatDate(digest.data.created_at)}</span>
+            <span class="dcard-sep">·</span>
+            <span class="dcard-read">{readingTime(digest)} мин</span>
+          </span>
+          <span class="dcard-title">
+            {digest.data.title || formatDate(digest.data.created_at)}
+          </span>
+          {digest.data.summary && (
+            <span class="dcard-summary">{digest.data.summary}</span>
+          )}
+        </a>
+      </li>
+    ))}
+  </ul>
+</Base>
+
+<style is:global>
+  .ih {
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .ih-title {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: #ece8e0;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.4rem;
+  }
+
+  .ih-sub {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+  }
+
+  .empty {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+
+  .dlist {
+    list-style: none;
+  }
+
+  .dlist-item {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .dcard {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 1rem 0;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .dcard:hover .dcard-title {
+    color: var(--link-hover);
+    text-decoration: none;
+  }
+
+  .dcard-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    font-weight: 500;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .dcard-sep {
+    opacity: 0.4;
+  }
+
+  .dcard-read {
+    color: var(--text-dim);
+  }
+
+  .dcard-title {
+    font-size: 0.975rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.4;
+    transition: color 0.12s;
+  }
+
+  .dcard-summary {
+    font-size: 0.85rem;
+    color: var(--text-content);
+    line-height: 1.6;
+  }
+</style>
