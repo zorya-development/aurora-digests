@@ -126,13 +126,17 @@ const jsonLd =
   </body>
   <script>
     const bar = document.getElementById('scroll-progress')!;
-    const update = () => {
-      const scrolled = window.scrollY;
-      const total = document.documentElement.scrollHeight - window.innerHeight;
-      bar.style.width = total > 0 ? (scrolled / total * 100) + '%' : '0%';
-    };
-    window.addEventListener('scroll', update, { passive: true });
-    update();
+    // Only show on digest detail pages (where back nav is shown)
+    if (document.querySelector('.site-header')) {
+      bar.classList.add('active');
+      const update = () => {
+        const scrolled = window.scrollY;
+        const total = document.documentElement.scrollHeight - window.innerHeight;
+        bar.style.width = total > 0 ? (scrolled / total * 100) + '%' : '0%';
+      };
+      window.addEventListener('scroll', update, { passive: true });
+      update();
+    }
   </script>
 </html>
 
@@ -262,6 +266,11 @@ const jsonLd =
     background: var(--accent);
     z-index: 999;
     transition: width 0.1s linear;
+    display: none;
+  }
+
+  #scroll-progress.active {
+    display: block;
   }
 
   .site-footer {
