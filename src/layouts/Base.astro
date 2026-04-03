@@ -72,6 +72,12 @@ const jsonLd =
     <!-- JSON-LD -->
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 
+    <!-- RSS -->
+    <link rel="alternate" type="application/rss+xml" title="Silicon Ore" href="/rss.xml" />
+
+    <!-- Analytics -->
+    <script data-goatcounter="https://aurora-digests.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+
     <!-- Fonts -->
     <link
       href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
@@ -81,7 +87,19 @@ const jsonLd =
   <body>
     <div id="scroll-progress"></div>
     <div class="container">
-      {showBack && <nav><a href="/">← все дайджесты</a></nav>}
+      {showBack && (
+        <header class="site-header">
+          <a href="/" class="site-header-name">SILICON ORE</a>
+          <a href="/rss.xml" class="header-rss" title="RSS">
+            <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+              <circle cx="3" cy="13" r="1.5"/>
+              <path d="M3 7.5A5.5 5.5 0 0 1 8.5 13H10A7 7 0 0 0 3 6v1.5z"/>
+              <path d="M3 3A10 10 0 0 1 13 13h1.5A11.5 11.5 0 0 0 3 1.5V3z"/>
+            </svg>
+          </a>
+        </header>
+        <a href="/" class="back-btn">← все дайджесты</a>
+      )}
       <slot />
       <footer class="site-footer">
         <a href="https://t.me/a8h333" target="_blank" rel="noopener noreferrer" class="footer-tg">
@@ -94,6 +112,15 @@ const jsonLd =
         <span class="footer-contact">
           контакт: <a href="https://t.me/a8h333" target="_blank" rel="noopener noreferrer">@a8h333</a>
         </span>
+        <span class="footer-sep">·</span>
+        <a href="/rss.xml" class="footer-rss">
+          <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+            <circle cx="3" cy="13" r="1.5"/>
+            <path d="M3 7.5A5.5 5.5 0 0 1 8.5 13H10A7 7 0 0 0 3 6v1.5z"/>
+            <path d="M3 3A10 10 0 0 1 13 13h1.5A11.5 11.5 0 0 0 3 1.5V3z"/>
+          </svg>
+          RSS
+        </a>
       </footer>
     </div>
   </body>
@@ -166,21 +193,62 @@ const jsonLd =
     text-decoration-color: var(--link-hover);
   }
 
-  nav {
-    margin-bottom: 3rem;
+  .site-header {
+    padding-bottom: 1.25rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
 
-  nav a {
+  .site-header-name {
     font-family: var(--mono);
-    font-size: 0.75rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text);
+    text-decoration: none;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    transition: color 0.12s;
+  }
+
+  .site-header-name:hover {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .header-rss {
+    color: var(--text-dim);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    transition: color 0.12s;
+  }
+
+  .header-rss:hover {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .header-rss svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .back-btn {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 0.68rem;
     font-weight: 500;
     color: var(--text-muted);
     text-decoration: none;
     letter-spacing: 0.04em;
+    margin-bottom: 2.5rem;
     transition: color 0.12s;
   }
 
-  nav a:hover {
+  .back-btn:hover {
     color: var(--text);
     text-decoration: none;
   }
@@ -245,6 +313,25 @@ const jsonLd =
   .footer-contact a:hover {
     color: var(--text);
     text-decoration: none;
+  }
+
+  .footer-rss {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.12s;
+  }
+
+  .footer-rss:hover {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .footer-rss svg {
+    width: 11px;
+    height: 11px;
   }
 
   @media (max-width: 580px) {

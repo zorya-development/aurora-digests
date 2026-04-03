@@ -9,6 +9,7 @@
     "fetch": "node --env-file=.env scripts/fetch-digests.mjs"
   },
   "dependencies": {
+    "@astrojs/rss": "^4.0.18",
     "@astrojs/sitemap": "^3.7.2",
     "astro": "^5.0.0"
   }
